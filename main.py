@@ -48,7 +48,7 @@ class Webhook:
         if self.parameter_values['Type'] == '':
             self.parameter_values['Type'] = 'flat'
         text_response = ''
-        search_table = pd.read_csv('FullDB.csv', dtype='str').fillna('-1')
+        search_table = pd.read_csv('FullDB.csv', dtype='str').fillna('-2')
         search_table = search_table[(search_table['Name'] == self.parameter_values['Name']) &
                                     (search_table['Type'] == self.parameter_values['Type'])]
         temp = pd.DataFrame()
