@@ -24,10 +24,15 @@ def ppsm_distance(val):
 
 def area_distance(val):
     val = float(val)
-    min_area = db['MinTotalArea'].astype('float')
-    max_area = db['MaxTotalArea'].astype('float')
+    area_db = db.filter(items=['MinTotalArea', 'MaxTotalArea'])
+    area_db = area_db.dropna(axis=0, how='any')
+    min_area = area_db['MinTotalArea'].astype('float')
+    max_area = area_db['MaxTotalArea'].astype('float')
     abs_distance = np.minimum(abs(val - min_area), abs(max_area - val))
-    return normalize(abs_distance)
+    area_db['Distance'] = normalize(abs_distance)
+    temp = pd.merge(db, area_db, how='left', left_index=True, right_index=True)
+    temp['Distance'] = temp['Distance'].fillna(1)
+    return temp['Distance']
 
 
 def rooms_distance(val):
@@ -59,7 +64,7 @@ def date_distance(val):
 
 def type_distance(val):
     types = db['Type']
-    abs_distance = np.where(types==val, 0, 1)
+    abs_distance = np.where(types == val, 0, 1)
     return abs_distance
 
 
