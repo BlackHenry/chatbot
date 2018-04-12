@@ -79,7 +79,10 @@ class Webhook:
         for parameter in parameters:
             distance += process(self.parameter_values[parameter], parameter)/float(self.cost_coefficients[parameter])
         search_table['Distance'] = pd.Series(distance)
-        search_table = search_table.sort_values(by=['Distance']).reset_index()[:10]
+        if search_table[search_table['Distance'] == 0].shape[0] >= 10:
+            search_table = search_table[search_table['Distance'] == 0]
+        else:
+            search_table = search_table.sort_values(by=['Distance']).reset_index()[:10]
         search_table = search_table[search_table['Name'] != '-1']
         filters = parameters
         filters.append('Name')
