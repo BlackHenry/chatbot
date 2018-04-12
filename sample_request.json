@@ -1,0 +1,62 @@
+{
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "какие есть за 2000000?",
+    "action": "search_complex",
+    "actionIncomplete": false,
+    "parameters": {
+      "Name": "",
+      "Rooms": "",
+      "Date": "",
+      "TotalArea": "",
+      "TotalPrice": "2000000",
+      "District": "",
+      "PPSM": "",
+      "Type": "",
+      "ReadyStatus": ""
+    },
+    "contexts": [
+      {
+        "name": "search_details",
+        "parameters": {
+          "ReadyStatus.original": "",
+          "Date.original": "",
+          "Name.original": "",
+          "Date": "",
+          "Rooms": "",
+          "Name": "",
+          "TotalArea.original": "",
+          "TotalArea": "",
+          "Type": "",
+          "PPSM.original": "",
+          "ReadyStatus": "",
+          "TotalPrice": "2000000",
+          "Rooms.original": "",
+          "District": "",
+          "Type.original": "",
+          "District.original": "",
+          "PPSM": "",
+          "TotalPrice.original": "2000000?"
+        },
+        "lifespan": 10
+      }
+    ],
+    "metadata": {
+      "intentId": "43b5a0d3-bd88-4343-b551-1420922a0a03",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "webhookResponseTime": 634,
+      "intentName": "search_for_complex"
+    },
+    "fulfillment": {
+      "speech": "",
+      "messages": [
+        {
+          "type": 0,
+          "speech": ""
+        }
+      ]
+    },
+    "score": 0.8999999761581421
+  }
+}
