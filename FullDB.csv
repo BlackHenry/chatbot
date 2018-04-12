@@ -1,4 +1,4 @@
-,Type,ComplexID,ID,Name,Street,District,Date,Discount,URL,FullName,Rooms,MaxTotalArea,MaxPPSM,MaxTotalPrice,MinTotalArea,MinPPSM,MinTotalPrice,TotalArea,TotalPrice,PPSM,coordinates
+,Type,ComplexID,ID,Name,Street,District,Date,Discount,URL,FullName,Rooms,MaxTotalArea,MaxPPSM,MaxTotalPrice,MinTotalArea,MinPPSM,MinTotalPrice,TotalArea,TotalPrice,PPSM,Location
 125,car,104,107,"Червонозоряний пр-т, 6-Є","Червонозоряний пр-т, 4-А, №2-3-5",Солом'янський р-н,введений,-30%,https://kmb.ua/objects/134-prosp-chervonozoryanij-6-e/,"Червонозоряний пр-т, 6-Є Червонозоряний пр-т, 4-А, №2-3-5",,,,9999999,,,194000,,194000-9999999 грн.,,"50.4233545, 30.4613811"
 126,car,104,108,"Червонозоряний пр-т, 4-Є","Червонозоряний пр-т, 4-А, №4",Солом'янський р-н,введений,-30%,https://kmb.ua/objects/133-prosp-chervonozoryanij-4-e/,"Червонозоряний пр-т, 4-Є Червонозоряний пр-т, 4-А, №4",,,,9999999,,,142500,,142500-9999999 грн.,,"50.4233545, 30.4613811"
 132,car,107,111,"вул. Володі Дубініна, 2 (літ. А)",,Голосіївський р-н,12.2019,,,"вул. Володі Дубініна, 2 (літ. А) ",,,,9999999,,,217500,,217500-9999999 грн.,,"50.3906872, 30.494419"
