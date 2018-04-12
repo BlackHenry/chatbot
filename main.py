@@ -77,6 +77,8 @@ class Webhook:
         distance = [0 for _ in range(search_table.shape[0])]
         for parameter in parameters:
             distance += process(self.parameter_values[parameter], parameter)/float(self.cost_coefficients[parameter])
+        search_table['Distance'] = pd.Series(distance)
+        search_table = search_table.sort_values(by=['Distance'])[-10:]
         search_table = search_table[search_table['Name'] != '-1']
         search_table = search_table.filter(parameters.append('Name').append('URL'))
         search_table = search_table.drop_duplicates().reset_index()
