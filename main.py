@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import json
 import pandas as pd
 from flask import Flask, jsonify, make_response, request
 from cost_functions import process
@@ -78,9 +79,12 @@ class Webhook:
         for parameter in parameters:
             distance += process(self.parameter_values[parameter], parameter)/float(self.cost_coefficients[parameter])
         search_table['Distance'] = pd.Series(distance)
-        search_table = search_table.sort_values(by=['Distance'])[-10:]
+        search_table = search_table.sort_values(by=['Distance']).reset_index()[:10]
         search_table = search_table[search_table['Name'] != '-1']
-        search_table = search_table.filter(parameters.append('Name').append('URL'))
+        filters = parameters
+        filters.append('Name')
+        filters.append('URL')
+        search_table = search_table.filter(filters)
         search_table = search_table.drop_duplicates().reset_index()
         names = []
         for name, _ in zip(search_table['Name'], range(search_table['Name'].size)):
@@ -125,5 +129,7 @@ def post():
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    file = open('sample_request.json', 'r')
+    j = json.load(file)
+    print(app.test_client().post('/', data=json.dumps(j)))
 # [END app]

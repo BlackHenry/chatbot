@@ -2,13 +2,6 @@ import pandas as pd
 import numpy as np
 
 
-def __init__():
-    global db, func_dict
-    db = pd.read_csv('FullDB.csv')
-    func_dict = {'TotalPrice': price_distance, 'PPSM': ppsm_distance, 'TotalArea': area_distance,
-                 'Rooms': rooms_distance, 'Location': loc_distance, 'Date': date_distance}
-
-
 def normalize(a):
     return a/max(a)
 
@@ -17,7 +10,7 @@ def price_distance(val):
     val = float(val)
     min_price = db['MinTotalPrice'].astype('float')
     max_price = db['MaxTotalPrice'].astype('float')
-    abs_distance = min(abs(val - min_price), abs(max_price - val))
+    abs_distance = np.minimum(abs(val - min_price), abs(max_price - val))
     return normalize(abs_distance)
 
 
@@ -25,7 +18,7 @@ def ppsm_distance(val):
     val = float(val)
     min_ppsm = db['MinPPSM'].astype('float')
     max_ppsm = db['MaxPPSM'].astype('float')
-    abs_distance = min(abs(val - min_ppsm), abs(max_ppsm - val))
+    abs_distance = np.minimum(abs(val - min_ppsm), abs(max_ppsm - val))
     return normalize(abs_distance)
 
 
@@ -33,7 +26,7 @@ def area_distance(val):
     val = float(val)
     min_area = db['MinTotalArea'].astype('float')
     max_area = db['MaxTotalArea'].astype('float')
-    abs_distance = min(abs(val - min_area), abs(max_area - val))
+    abs_distance = np.minimum(abs(val - min_area), abs(max_area - val))
     return normalize(abs_distance)
 
 
@@ -60,10 +53,22 @@ def date_distance(val):
     val_month = int(val.split('.')[0])
     dates_year = dates.apply(lambda x: int(x.split('.')[1]))
     dates_month = dates.apply(lambda x: int(x.split('.')[1]))
-    abs_distance = max(np.zeros_like(dates_year), (dates_year - val_year) * 12 + dates_month - val_month)
+    abs_distance = np.maximum(np.zeros_like(dates_year), (dates_year - val_year) * 12 + dates_month - val_month)
     return normalize(abs_distance)
 
 
+def type_distance(val):
+    types = db['Type']
+    abs_distance = np.where(types==val, 0, 1)
+    return abs_distance
+
+
+db = pd.read_csv('FullDB.csv')
+func_dict = {'TotalPrice': price_distance, 'PPSM': ppsm_distance, 'TotalArea': area_distance,
+             'Rooms': rooms_distance, 'Location': loc_distance, 'Date': date_distance, 'Type': type_distance}
+
+
 def process(val, parameter):
-    return func_dict[parameter](val)
+    if parameter in func_dict:
+        return func_dict[parameter](val)
 
