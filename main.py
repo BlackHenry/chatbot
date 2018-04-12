@@ -2,6 +2,7 @@
 import logging
 import pandas as pd
 from flask import Flask, jsonify, make_response, request
+from cost_functions import process
 
 app = Flask(__name__)
 
@@ -9,8 +10,10 @@ app = Flask(__name__)
 class Webhook:
     def __init__(self):
         self.parameters = ['District', 'Name', 'Street', 'Date', 'Discount', 'Rooms', 'TotalArea', 'PPSM', 'TotalPrice',
-                           'IsMinOrMax', 'Parameters', 'Type']
+                           'Parameters', 'Type']
         self.parameter_values = {p: '' for p in self.parameters}
+        self.cost_coefficients = {'Location': 5, 'Date': 1, 'District': 4, 'Rooms': 2, 'TotalArea': 2,
+                                 'PPSM': 2, 'TotalPrice': 2, 'Type': 1}
 
     def get_parameter_values(self, obj):
         for parameter in self.parameters:
@@ -71,35 +74,17 @@ class Webhook:
             parameters.remove('Parameters')
         except Exception:
             pass
+        distance = [0 for _ in range(search_table.shape[0])]
         for parameter in parameters:
-            if self.parameter_values[parameter] == 'Max' or self.parameter_values[parameter] == 'Min':
-                continue
-            if parameter == 'Date':
-                search_table = search_table[(search_table[parameter] <= self.parameter_values[parameter]) |
-                                            (search_table[parameter] == 'введений')]
-                continue
-            if parameter == 'TotalArea' or parameter == 'TotalPrice' or parameter == 'PPSM':
-                search_table = search_table[(search_table['Min' + parameter].astype('float') <= 1.2 * float(self.parameter_values[parameter])) &
-                                            (search_table['Max' + parameter].astype('float') >= 0.8 * float(self.parameter_values[parameter]))]
-                continue
-            search_table = search_table[search_table[parameter] == self.parameter_values[parameter]]
-        for parameter in parameters:
-            if self.parameter_values[parameter] == 'Max':
-                search_table = search_table.sort_values(by=[parameter])[-1 * min(3, search_table.shape[0]):]
-            if self.parameter_values[parameter] == 'Min':
-                search_table = search_table.sort_values(by=[parameter])[:min(3, search_table.shape[0])]
+            distance += process(self.parameter_values[parameter], parameter)/float(self.cost_coefficients[parameter])
         search_table = search_table[search_table['Name'] != '-1']
-        temp = pd.DataFrame()
-        temp['Name'] = search_table['Name']
-        temp['URL'] = search_table['URL']
-        for parameter in parameters:
-            temp[parameter] = search_table[parameter]
-        search_table = temp.drop_duplicates().reset_index()
+        search_table = search_table.filter(parameters.append('Name').append('URL'))
+        search_table = search_table.drop_duplicates().reset_index()
         names = []
         for name, _ in zip(search_table['Name'], range(search_table['Name'].size)):
             name += ': '
             for parameter in parameters:
-                if parameter in ['Name', 'Type']:
+                if parameter in ['Name', 'Type', 'URL']:
                     continue
                 name += search_table[parameter][_] + '; '
             names.append(name)
