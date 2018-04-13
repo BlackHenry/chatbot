@@ -6,38 +6,35 @@ def normalize(a):
     return a/max(a)
 
 
-def price_distance(val):
+def min_max_distance(val, min_column_name, max_column_name):
     val = float(val)
-    min_price = db['MinTotalPrice'].astype('float')
-    max_price = db['MaxTotalPrice'].astype('float')
-    abs_distance = np.minimum(abs(val - min_price), abs(max_price - val))
-    return normalize(abs_distance)
-
-
-def ppsm_distance(val):
-    val = float(val)
-    min_ppsm = db['MinPPSM'].astype('float')
-    max_ppsm = db['MaxPPSM'].astype('float')
-    abs_distance = np.minimum(abs(val - min_ppsm), abs(max_ppsm - val))
-    return normalize(abs_distance)
-
-
-def area_distance(val):
-    val = float(val)
-    area_db = db.filter(items=['MinTotalArea', 'MaxTotalArea'])
-    area_db = area_db.dropna(axis=0, how='any')
-    min_area = area_db['MinTotalArea'].astype('float')
-    max_area = area_db['MaxTotalArea'].astype('float')
-    abs_distance = np.minimum(abs(val - min_area), abs(max_area - val))
-    area_db['Distance'] = normalize(abs_distance)
-    temp = pd.merge(db, area_db, how='left', left_index=True, right_index=True)
+    min_max_db = db.filter(items=[min_column_name, max_column_name])
+    min_max_db = min_max_db.dropna(axis=0, how='any')
+    min_column = min_max_db[min_column_name].astype('float')
+    max_column = min_max_db[max_column_name].astype('float')
+    abs_distance = (abs(val - min_column) + abs(max_column - val) - abs(max_column - min_column)) / 2.0
+    min_max_db['Distance'] = normalize(abs_distance)
+    temp = pd.merge(db, min_max_db, how='left', left_index=True, right_index=True)
     temp['Distance'] = temp['Distance'].fillna(1)
     return temp['Distance']
 
 
+def price_distance(val):
+    return min_max_distance(val, 'MinTotalPrice', 'MaxTotalPrice')
+
+
+def ppsm_distance(val):
+    return min_max_distance(val, 'MinPPSM', 'MaxPPSM')
+
+
+def area_distance(val):
+    return min_max_distance(val, 'MinTotalArea', 'MaxTotalArea')
+
+
 def rooms_distance(val):
+    val = val.split()[0]
     val = int(val)
-    rooms = db['Rooms'].astype('int')
+    rooms = db['Rooms'].apply(lambda x: x.split()[0]).astype('int')
     abs_distance = abs(rooms - val)
     return normalize(abs_distance)
 

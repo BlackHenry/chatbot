@@ -8,11 +8,11 @@
       "Name": "",
       "Rooms": "",
       "Date": "",
-      "TotalArea": "55",
+      "TotalArea": "50",
       "TotalPrice": "2000000",
       "District": "",
-      "PPSM": "",
-      "Type": "",
+      "PPSM": "50000",
+      "Type": "flat",
       "ReadyStatus": ""
     },
     "contexts": [
@@ -30,13 +30,13 @@
           "Type": "",
           "PPSM.original": "",
           "ReadyStatus": "",
-          "TotalPrice": "2000000",
+          "TotalPrice": "",
           "Rooms.original": "",
           "District": "",
           "Type.original": "",
           "District.original": "",
           "PPSM": "",
-          "TotalPrice.original": "2000000?"
+          "TotalPrice.original": ""
         },
         "lifespan": 10
       }
