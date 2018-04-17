@@ -85,7 +85,8 @@ class Webhook:
         else:
             search_table = search_table.sort_values(by=['Distance']).reset_index()[:10]
         filters = parameters
-        filters.append('Name')
+        if 'Name' not in filters:
+            filters.append('Name')
         filters.append('URL')
         search_table = search_table.filter(filters)
         search_table = search_table.drop_duplicates().reset_index()
