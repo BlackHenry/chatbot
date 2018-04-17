@@ -32,11 +32,8 @@ def area_distance(val):
 
 
 def rooms_distance(val):
-    val = val.split()[0]
-    val = int(val)
-    rooms = db['Rooms'].apply(lambda x: x.split()[0]).astype('int')
-    abs_distance = abs(rooms - val)
-    return normalize(abs_distance)
+    distance = np.where(db['Rooms'] == val, 0, 1)
+    return distance
 
 
 def loc_distance(val):

@@ -134,5 +134,7 @@ def post():
 if __name__ == '__main__':
     file = open('sample_request.json', 'r')
     j = json.load(file)
-    print(app.test_client().post('/', data=json.dumps(j)))
+    p = app.test_client().post('/', data=json.dumps(j))
+    j = json.loads(p.data)
+    print(j['data'])
 # [END app]

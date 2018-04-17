@@ -6,13 +6,13 @@
     "actionIncomplete": false,
     "parameters": {
       "Name": "",
-      "Rooms": "",
+      "Rooms": "1 комната",
       "Date": "",
-      "TotalArea": "50",
-      "TotalPrice": "2000000",
+      "TotalArea": "",
+      "TotalPrice": "",
       "District": "",
-      "PPSM": "50000",
-      "Type": "flat",
+      "PPSM": "",
+      "Type": "",
       "ReadyStatus": ""
     },
     "contexts": [
