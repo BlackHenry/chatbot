@@ -3,7 +3,8 @@ import numpy as np
 
 
 def normalize(a):
-    return a/max(a)
+    m = (a/max(a)).reset_index(drop=True)
+    return m
 
 
 def min_max_distance(val, min_column_name, max_column_name):
@@ -46,8 +47,8 @@ def name_distance(val):
 
 def loc_distance(val):
     locs = db['Location']
-    locs_x = locs.apply(lambda x: float(x.split(',')[0]))
-    locs_y = locs.apply(lambda x: float(x.split(',')[1]))
+    locs_x = locs.apply(lambda x: float(x.split(', ')[0]))
+    locs_y = locs.apply(lambda x: float(x.split(', ')[1]))
     val_x = float(val.split(',')[0])
     val_y = float(val.split(',')[1])
     abs_distance = (locs_x - val_x)**2 + (locs_y - val_y)**2
@@ -70,12 +71,14 @@ def type_distance(val):
     return abs_distance
 
 
-db = pd.read_csv('FullDB.csv')
+db = pd.DataFrame()
 func_dict = {'TotalPrice': price_distance, 'PPSM': ppsm_distance, 'TotalArea': area_distance, 'Name': name_distance,
              'Rooms': rooms_distance, 'Location': loc_distance, 'Date': date_distance, 'Type': type_distance}
 
 
-def process(val, parameter):
+def process(val, parameter, d):
+    global db
+    db = d
     if parameter in func_dict:
         return func_dict[parameter](val)
 

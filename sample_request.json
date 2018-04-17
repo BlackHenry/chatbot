@@ -6,14 +6,15 @@
     "actionIncomplete": false,
     "parameters": {
       "Name": "",
-      "Rooms": "1 комната",
+      "Rooms": "",
       "Date": "",
       "TotalArea": "",
       "TotalPrice": "",
       "District": "",
       "PPSM": "",
       "Type": "",
-      "ReadyStatus": ""
+      "ReadyStatus": "",
+      "Location": "50.4771674, 30.3591526"
     },
     "contexts": [
       {

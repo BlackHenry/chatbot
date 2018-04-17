@@ -10,7 +10,7 @@ app = Flask(__name__)
 class Webhook:
     def __init__(self):
         self.parameters = ['District', 'Name', 'Street', 'Date', 'Discount', 'Rooms', 'TotalArea', 'PPSM', 'TotalPrice',
-                           'Parameters', 'Type']
+                           'Parameters', 'Type', 'Location']
         self.parameter_values = {p: '' for p in self.parameters}
         self.cost_coefficients = {'Location': 5, 'Date': 1, 'District': 4, 'Rooms': 2, 'TotalArea': 2,
                                   'PPSM': 2, 'TotalPrice': 2, 'Type': 1, 'Name': 1}
@@ -67,37 +67,49 @@ class Webhook:
         if self.parameter_values['Type'] == '':
             self.parameter_values['Type'] = 'flat'
             parameters.append('Type')
+
         search_table = pd.read_csv('FullDB.csv', dtype='str')
         search_table['URL'] = search_table['URL'].fillna('https://kmb.ua/')
         search_table = search_table.fillna('-1')
+
         try:
             parameters.remove('Parameters')
         except Exception:
             pass
-        distance = [0 for _ in range(search_table.shape[0])]
-        for parameter in parameters:
-            distance += process(self.parameter_values[parameter], parameter)/float(self.cost_coefficients[parameter])
-        search_table['Distance'] = pd.Series(distance)
-        search_table = search_table[search_table['Name'] != '-1']
-        if search_table[search_table['Distance'] == 0].shape[0] >= 10:
-            search_table = search_table[search_table['Distance'] == 0]
-        else:
-            search_table = search_table.sort_values(by=['Distance']).reset_index()[:10]
-        filters = parameters
+
+        filters = parameters[:]
+        if 'Location' in parameters:
+            filters.append('Street')
         if 'Name' not in filters:
             filters.append('Name')
         filters.append('URL')
         search_table = search_table.filter(filters)
-        search_table = search_table.drop_duplicates().reset_index()
+        search_table = search_table[search_table['Name'] != '-1']
+        search_table = search_table.drop_duplicates().reset_index(drop=True)
+
+        distance = pd.Series([0 for _ in range(search_table.shape[0])])
+        for parameter in parameters:
+            distance += process(self.parameter_values[parameter], parameter, search_table)*float(self.cost_coefficients[parameter])
+        search_table['Distance'] = pd.Series(distance)
+
+        if search_table[search_table['Distance'] == 0].shape[0] >= 10:
+            search_table = search_table[search_table['Distance'] == 0]
+        else:
+            search_table = search_table.sort_values(by=['Distance']).reset_index()[:10]
+
         names = []
         for name, _ in zip(search_table['Name'], range(search_table['Name'].size)):
             name += ': '
             for parameter in parameters:
                 if parameter in ['Name', 'Type', 'URL']:
                     continue
-                name += search_table[parameter][_] + '; '
+                if parameter == 'Location':
+                    name += search_table['Street'][_] + '; '
+                else:
+                    name += search_table[parameter][_] + '; '
             names.append(name)
         search_table['Name'] = pd.Series(names)
+
         if search_table.shape[0] > 0 and len(parameters) > 1:
             text_response = 'По вашему запросу найдены такие комплексы: '
             return self.compose_telegram_card_response(text_response, search_table['Name'], search_table['URL'])
