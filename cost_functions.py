@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import copy
 
 
 def normalize(a):
@@ -56,11 +57,13 @@ def loc_distance(val):
 
 
 def date_distance(val):
-    dates = db['Date']
+    dates = db['Date'][:]
+    dates[dates == '-1'] = '10000.10000'
+    dates[dates == 'введений'] = '0.0'
     val_year = int(val.split('.')[1])
     val_month = int(val.split('.')[0])
     dates_year = dates.apply(lambda x: int(x.split('.')[1]))
-    dates_month = dates.apply(lambda x: int(x.split('.')[1]))
+    dates_month = dates.apply(lambda x: int(x.split('.')[0]))
     abs_distance = np.maximum(np.zeros_like(dates_year), (dates_year - val_year) * 12 + dates_month - val_month)
     return normalize(abs_distance)
 
@@ -78,7 +81,7 @@ func_dict = {'TotalPrice': price_distance, 'PPSM': ppsm_distance, 'TotalArea': a
 
 def process(val, parameter, d):
     global db
-    db = d
+    db = copy.copy(d)
     if parameter in func_dict:
         return func_dict[parameter](val)
 

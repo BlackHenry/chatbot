@@ -93,9 +93,9 @@ class Webhook:
         search_table['Distance'] = pd.Series(distance)
 
         if search_table[search_table['Distance'] == 0].shape[0] >= 10:
-            search_table = search_table[search_table['Distance'] == 0]
+            search_table = search_table[search_table['Distance'] == 0].reset_index(drop=True)
         else:
-            search_table = search_table.sort_values(by=['Distance']).reset_index()[:10]
+            search_table = search_table.sort_values(by=['Distance']).reset_index(drop=True)[:10]
 
         names = []
         for name, _ in zip(search_table['Name'], range(search_table['Name'].size)):

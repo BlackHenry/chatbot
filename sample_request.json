@@ -7,14 +7,14 @@
     "parameters": {
       "Name": "",
       "Rooms": "",
-      "Date": "",
+      "Date": "09.2018",
       "TotalArea": "",
       "TotalPrice": "",
       "District": "",
       "PPSM": "",
       "Type": "",
       "ReadyStatus": "",
-      "Location": "50.4771674, 30.3591526"
+      "Location": ""
     },
     "contexts": [
       {
