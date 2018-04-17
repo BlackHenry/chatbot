@@ -19,6 +19,11 @@ def min_max_distance(val, min_column_name, max_column_name):
     return temp['Distance']
 
 
+def exact_distance(val, column_name):
+    distance = np.where(db[column_name] == val, 0, 1)
+    return distance
+
+
 def price_distance(val):
     return min_max_distance(val, 'MinTotalPrice', 'MaxTotalPrice')
 
@@ -32,8 +37,11 @@ def area_distance(val):
 
 
 def rooms_distance(val):
-    distance = np.where(db['Rooms'] == val, 0, 1)
-    return distance
+    return exact_distance(val, 'Rooms')
+
+
+def name_distance(val):
+    return exact_distance(val, 'Name')
 
 
 def loc_distance(val):
@@ -63,7 +71,7 @@ def type_distance(val):
 
 
 db = pd.read_csv('FullDB.csv')
-func_dict = {'TotalPrice': price_distance, 'PPSM': ppsm_distance, 'TotalArea': area_distance,
+func_dict = {'TotalPrice': price_distance, 'PPSM': ppsm_distance, 'TotalArea': area_distance, 'Name': name_distance,
              'Rooms': rooms_distance, 'Location': loc_distance, 'Date': date_distance, 'Type': type_distance}
 
 

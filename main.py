@@ -14,7 +14,7 @@ class Webhook:
                            'Parameters', 'Type']
         self.parameter_values = {p: '' for p in self.parameters}
         self.cost_coefficients = {'Location': 5, 'Date': 1, 'District': 4, 'Rooms': 2, 'TotalArea': 2,
-                                 'PPSM': 2, 'TotalPrice': 2, 'Type': 1}
+                                  'PPSM': 2, 'TotalPrice': 2, 'Type': 1, 'Name': 1}
 
     def get_parameter_values(self, obj):
         for parameter in self.parameters:
@@ -135,6 +135,7 @@ if __name__ == '__main__':
     file = open('sample_request.json', 'r')
     j = json.load(file)
     p = app.test_client().post('/', data=json.dumps(j))
-    j = json.loads(p.data)
-    print(j['data'])
+    if p.status_code == 200:
+        j = json.loads(p.data)
+        print(j['data'])
 # [END app]
