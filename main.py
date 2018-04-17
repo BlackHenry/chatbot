@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import logging
 import json
 import pandas as pd
 from flask import Flask, jsonify, make_response, request
