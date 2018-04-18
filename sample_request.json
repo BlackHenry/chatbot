@@ -6,12 +6,12 @@
     "actionIncomplete": false,
     "parameters": {
       "Name": "",
-      "Rooms": "1 комната",
+      "Rooms": "",
       "Date": "",
       "TotalArea": "",
       "TotalPrice": "",
       "District": "",
-      "PPSM": "",
+      "PPSM": "50000",
       "Type": "",
       "ReadyStatus": "",
       "Location": ""

@@ -82,6 +82,12 @@ class Webhook:
             filters.append('Street')
         if 'Name' not in filters:
             filters.append('Name')
+        if 'PPSM' in parameters:
+            filters += ['MinPPSM', 'MaxPPSM']
+        if 'TotalPrice' in parameters:
+            filters += ['MinTotalPrice', 'MaxTotalPrice']
+        if 'TotalArea' in parameters:
+            filters += ['MinTotaArea', 'MaxTotalArea']
         filters.append('URL')
         search_table = search_table.filter(filters)
         search_table = search_table[search_table['Name'] != '-1']
