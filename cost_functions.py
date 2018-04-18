@@ -39,7 +39,13 @@ def area_distance(val):
 
 
 def rooms_distance(val):
-    return exact_distance(val, 'Rooms')
+    rooms_col = copy.copy(db['Rooms'])
+    rooms_col[rooms_col == '-1'] = '10'
+    rooms_col = rooms_col.apply(lambda x: x.split()[0])
+    rooms_col[(rooms_col < '0') | (rooms_col > '9')] = '10'
+    rooms_col = rooms_col.astype('int')
+    abs_distance = abs(rooms_col - int(val.split()[0]))
+    return normalize(abs_distance)
 
 
 def name_distance(val):
@@ -69,9 +75,7 @@ def date_distance(val):
 
 
 def type_distance(val):
-    types = db['Type']
-    abs_distance = np.where(types == val, 0, 1)
-    return abs_distance
+    return exact_distance(val, 'Type')
 
 
 db = pd.DataFrame()
