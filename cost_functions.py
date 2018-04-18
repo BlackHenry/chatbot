@@ -39,7 +39,7 @@ def area_distance(val):
 
 
 def rooms_distance(val):
-    rooms_col = copy.copy(db['Room'])
+    rooms_col = copy.copy(db['Rooms'])
     rooms_col[rooms_col == '-1'] = '10'
     rooms_col = rooms_col.apply(lambda x: x.split()[0])
     rooms_col[(rooms_col < '0') | (rooms_col > '9')] = '10'
