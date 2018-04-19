@@ -3,6 +3,7 @@ import json
 import pandas as pd
 from flask import Flask, jsonify, make_response, request
 from cost_functions import process
+import urllib.request as gt
 
 app = Flask(__name__)
 
@@ -127,6 +128,29 @@ class Webhook:
         result = {}
         self.get_parameter_values(obj)
         action_name = str(obj['result']['action'])
+        if action_name == 'Callback':    
+            phone_number=obj['result']['parameters']['phone-number']
+            if phone_number[0]=='3':
+                a=''
+            elif phone_number[0]=='8':
+                a='3'
+            elif phone_number[0]=='0':
+                a='38'
+            else:
+                a='380'
+            correct_phone_number=a+phone_number
+            if len(correct_phone_number)==10:
+                link=("http://tracker.test.com/Redisphone/CallBack?phoneNumberValue=" + correct_phone_number + "&clientHash=0aba7b95-0493-459d-b380-cf1e8eda6a55&visitId=102626482&guid=1a057fc0-75de-462c-a37d-77070542fe2c&profileId=7250737" )
+                
+                contents = gt.urlopen(link).read()
+                text_response = 'В ближайшее время с Вами свяжется представитель отдела продаж'
+                result = {'speech': text_response, 'displayText': text_response, 'source': 'webhookdata'}
+                result['contextOut'] = obj['result']['contexts']
+                return result
+            else:
+                text_response = 'Вы ввели не правильный телефонный номер, можете по'
+                result = {'speech': text_response, 'displayText': text_response, 'source': 'webhookdata'}
+                result['contextOut'] = obj['result']['contexts']
         if action_name == 'search_for_parameter':
             if self.parameter_values['Name'] != '':
                 result = self.search_for_parameter(self.parameter_values['Parameters'])
