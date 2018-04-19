@@ -54,9 +54,9 @@ def name_distance(val):
 
 def loc_distance(val):
     locs = db['Location']
-    locs_x = locs.apply(lambda x: float(x.split(', ')[0]))
+    locs_x = locs.apply(lambda x: float(x.split(', ')[0])) * 0.6
     locs_y = locs.apply(lambda x: float(x.split(', ')[1]))
-    val_x = float(val.split(',')[0])
+    val_x = float(val.split(',')[0]) * 0.6
     val_y = float(val.split(',')[1])
     abs_distance = ((locs_x - val_x)**2 + (locs_y - val_y)**2)**0.5
     return normalize(abs_distance)
