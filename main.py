@@ -13,7 +13,7 @@ class Webhook:
                            'Parameters', 'Type', 'Location']
         self.parameter_values = {p: '' for p in self.parameters}
         self.cost_coefficients = {'Location': 5, 'Date': 1, 'District': 4, 'Rooms': 2, 'TotalArea': 2,
-                                  'PPSM': 2, 'TotalPrice': 2, 'Type': 1, 'Name': 1}
+                                  'PPSM': 2, 'TotalPrice': 2, 'Type': 3, 'Name': 1}
 
     def get_parameter_values(self, obj):
         for parameter in self.parameters:
